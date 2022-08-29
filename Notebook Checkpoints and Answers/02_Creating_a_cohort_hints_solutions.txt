@@ -1,0 +1,115 @@
+######################### CHECKPOINT 1 #########################
+check_1.hint <- function() {
+writeLines("Update the first blank with an entry or completion variable of your choice. The next two blanks correspond to the years you want your cohort to be between. The final blank will be a comparison operator.")
+}
+
+check_1_entry.solution <- function() {
+    qry_to_disp = paste0("query <- \"SELECT
+RP.psnumber,
+RP.progname,
+RP.standardstype,
+RA.apprnumber,
+RA.naicscode,
+NNI.Name,
+RA.occupationtitle,
+RA.onetsoccode,
+RA.apprstatus,
+RA.startdt,
+RA.progstate,
+RA.progzip5,
+RA.county,
+RA.termlengthmin,
+RA.gender,
+RA.race,
+RA.ethnicity,
+RA.vetstatind,
+RA.disabled,
+RA.ageatstart,
+RA.exitwagedt
+FROM ds_public_1.dbo.rapids_apprentice RA
+JOIN ds_public_1.dbo.rapids_program RP ON (RP.psnumber =RA.psnumber)
+LEFT JOIN ds_ar_dws.dbo.NAICS_National_Industry NNI ON (NNI.Code = RA.naicscode)
+WHERE RA.progstate='AR' --RESTRICT TO ARKANSAS PARTICIPANTS ONLY
+AND YEAR(RA.startdt) BETWEEN 2015 AND 2017 --RESTRICT TO THESE YEARS AND ENTERERS.")
+    writeLines(qry_to_disp)
+}
+
+check_1_exit.solution <- function() {
+    qry_to_disp = paste0("query <- \"SELECT
+RP.psnumber,
+RP.progname,
+RP.standardstype,
+RA.apprnumber,
+RA.naicscode,
+NNI.Name,
+RA.occupationtitle,
+RA.onetsoccode,
+RA.apprstatus,
+RA.startdt,
+RA.progstate,
+RA.progzip5,
+RA.county,
+RA.termlengthmin,
+RA.gender,
+RA.race,
+RA.ethnicity,
+RA.vetstatind,
+RA.disabled,
+RA.ageatstart,
+RA.exitwagedt
+FROM ds_public_1.dbo.rapids_apprentice RA
+JOIN ds_public_1.dbo.rapids_program RP ON (RP.psnumber =RA.psnumber)
+LEFT JOIN ds_ar_dws.dbo.NAICS_National_Industry NNI ON (NNI.Code = RA.naicscode)
+WHERE RA.progstate='AR' --RESTRICT TO ARKANSAS PARTICIPANTS ONLY
+AND YEAR(RA.exitwagedt) BETWEEN 2015 AND 2017 --RESTRICT TO THESE YEARS AND ENTERERS.
+AND RA.apprstatus = 'CO' -- RESTRICT TO COMPLETION STATUS\"")
+    writeLines(qry_to_disp)
+}
+
+######################### CHECKPOINT 2 #########################
+check_2.hint <- function() {
+    writeLines("For the blank, fill in the blank with the race variable.")
+}
+
+
+check_2.solution <- function() {
+    qry_to_disp <- paste0("checkpoint_cohort %>%
+    count(race) %>%
+    arrange(desc(n))")
+    writeLines(qry_to_disp)
+    }
+
+######################### CHECKPOINT 2A #########################
+
+check_2A.hint <- function() {
+    writeLines("Fill in the blank with the race variable.")
+}
+
+check_2A.solution <- function() {
+     qry_to_disp <- "checkpoint_cohort %>%
+    ggplot(aes(x=race)) + 
+    geom_bar() + 
+    theme(axis.text.x=element_text(angle=45, hjust=1))"
+    writeLines(qry_to_disp)
+}
+
+######################### CHECKPOINT 3 #########################
+
+check_3.hint <- function() {
+    writeLines("Fill in the blank with proper age variable.")
+}
+
+check_3.solution <- function() {
+    qry_to_disp <- "age_freq <- checkpoint_cohort %>%
+    count(ageatstart) %>%
+    arrange(ageatstart)"
+    writeLines(qry_to_disp)
+}
+
+######################### CHECKPOINT 4 #########################
+
+check_4.hint <- function() {
+    writeLines('Fill in the blank in the following format: cohort_team#_name where # refers to your team number and name refers to your name. For example: team3_cohort_sarah
+')
+}
+
