@@ -1,0 +1,44 @@
+######################### CHECKPOINT 1 #########################
+check_1.hint <- function() {
+    writeLines("Fill in the first blank with the name of your cohort.")
+}
+
+check_1.solution <- function() {
+    qry_to_disp = paste0("qry <- \"SELECT
+F.Quarter_ID - P.Apprenticeship_End_Quarter_ID AS Quarters_Relative_to_Completion,
+P.Person_ID,
+F.Primary_Employer_Wages ,
+PE.Federal_EIN
+FROM 
+tr_ar_2022.dbo.nb_cohort C --COHORT
+JOIN tr_ar_2022.dbo.AR_MDIM_Person P ON (P.Apprentice_Number=C.apprnumber) --PERSON
+JOIN tr_ar_2022.dbo.AR_FACT_Quarterly_Observation F --QUARTERLY OBSERVATION FACT
+	ON (P.Person_ID=F.Person_ID) 
+	AND (F.Quarter_ID BETWEEN (P.Apprenticeship_End_Quarter_ID) AND (P.Apprenticeship_End_Quarter_ID+4))  --QTRS POST COMPLETION
+JOIN tr_ar_2022.dbo.AR_RDIM_NAICS_National_Industry NNI ON (P.Apprenticeship_NAICS_National_Industry_ID=NNI.NAICS_National_Industry_ID) --APPRENTICESHIP INDUSTRY
+JOIN tr_ar_2022.dbo.AR_MDIM_Employer PE ON (PE.Employer_ID=F.Primary_Employer_ID)  --PRIMARY EMPLOYER
+WHERE P.Apprenticeship_Completer='Y' and YEAR(C.exitwagedt) = 2015\"")
+    writeLines(qry_to_disp)
+}
+
+######################### CHECKPOINT 2 #########################
+
+check_2.hint <- function() {
+    writeLines("Fill in the blank with your measure of interest.")
+}
+
+check_2.solution <- function() {
+     qry_to_disp <- "employer_measures <- employer_measures %>%
+    mutate(measure = ratio_full_total)"
+    writeLines(qry_to_disp)
+}
+
+######################### CHECKPOINT 3 #########################
+
+check_3.hint <- function() {
+    writeLines("Fill in the blank with the year for which you want to keep the employer measures. We recommend the year prior to your cohort selection.")
+}
+
+check_3.solution <- function() {
+   writeLines("select_year = 2014")
+}

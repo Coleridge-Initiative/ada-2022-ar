@@ -1,0 +1,74 @@
+######################### CHECKPOINT 1 #########################
+check_1.hint <- function() {
+    writeLines("Fill in the blank with the name of the cohort table you created in Module 2.")
+}
+
+check_1.solution <- function() {
+    qry_to_disp = paste0("qry <- \"SELECT C.race,
+F.Quarter_ID - P.Apprenticeship_End_Quarter_ID AS Quarters_Relative_to_Completion,
+P.Person_ID,
+F.Primary_Employer_Wages,
+PE.Federal_EIN,
+C.apprnumber
+FROM 
+tr_ar_2022.dbo.nb_cohort C --COHORT
+JOIN tr_ar_2022.dbo.AR_MDIM_Person P ON (P.Apprentice_Number=C.apprnumber) 
+JOIN tr_ar_2022.dbo.AR_FACT_Quarterly_Observation F
+    ON (P.Person_ID=F.Person_ID) 
+    AND (F.Quarter_ID BETWEEN (P.Apprenticeship_End_Quarter_ID + 1) AND (P.Apprenticeship_End_Quarter_ID+4)) 
+JOIN tr_ar_2022.dbo.AR_RDIM_NAICS_National_Industry NNI ON (P.Apprenticeship_NAICS_National_Industry_ID=NNI.NAICS_National_Industry_ID) 
+JOIN tr_ar_2022.dbo.AR_MDIM_Employer PE ON (PE.Employer_ID=F.Primary_Employer_ID)\"")
+    writeLines(qry_to_disp)
+}
+
+######################### CHECKPOINT 2 #########################
+check_2.hint <- function() {
+writeLines("This is similar to what we did in 05_Presentation_Prep.ipynb. We encourage you to review the rounding rules and the associated code in \nthat notebook.")
+}
+
+check_2.solution <- function() {
+    qry_to_disp = paste0("cohort_wages_checkpoint_2 <- cohort_wages %>%
+    group_by(Quarters_Relative_to_Completion, binary_race) %>%  
+    mutate(pop = n_distinct(Person_ID)) %>%
+    ungroup() %>%
+    group_by(Quarters_Relative_to_Completion, wage_ind, binary_race) %>%
+    summarise(employer_count = n_distinct(Federal_EIN),
+              count = n_distinct(Person_ID),
+               count_round = ifelse(count < 1000, round(count, digits = -1), 
+                                   round(count, digits = -2)),
+              pop = unique(pop),
+              pop_round = ifelse(pop < 1000, round(pop, digits = -1), 
+                round(pop, digits = -2)),
+             percentage = 100*(count_round/pop_round),
+             percentage_round = round(percentage, digits =0))")
+    writeLines(qry_to_disp)
+}
+
+######################### CHECKPOINT 3 #########################
+
+check_3.hint <- function() {
+    writeLines("As a reminder, the x-axis corresponds to the variable associated with quarters relative to completion. The y-axis corresponds to the \nrounded percentage meeting the employment threshold. Furthermore, the bar plots will be filled with the categorical variable that tells \nus if a completer is White or Non-White and the facet_grid is associated with the employment outcome. Note that there are also blanks for labelling the x and y axes, in addition to the title and caption.")
+}
+
+check_3.solution <- function() {
+     qry_to_disp <- "Figure_checkpoint_3 <- cohort_wages_checkpoint_2 %>%
+    ggplot(aes(x = Quarters_Relative_to_Completion, 
+               y = percentage_round, 
+               fill = binary_race)) +
+    geom_bar(stat='identity', position='dodge') +
+    facet_grid(. ~ fct_relevel(wage_ind, 'Above Minimum Wage', 'At or Below Minimum Wage')) +
+    expand_limits(y = 0) +
+    scale_fill_manual('Race Category', values = fill_color) +
+    labs(
+        # Labelling x axis
+        x = 'Quarters Relative to Completion', 
+        # Labelling y axis
+        y = 'Percent by Employment Outcome', 
+        # Add a title that conveys the main takeaway of the graph
+        title = 'Informative Title!', 
+        # cite the source of your data
+        caption = 'Arkansas RAPIDS and UI Wages Data (2015-2017 Completers)'
+        )"
+    writeLines(qry_to_disp)
+}
+
