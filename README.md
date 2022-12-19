@@ -3,7 +3,7 @@ There was a 2022 Applied Data Analytics training program sponsored by the state 
 
 This repository contains the class materials for the Arkansas applied data analytics program.
 
-**Datasets Used in the Class:**
+**Data Sources Used for the Class:**
 
 - Registered Apprenticeship Sponsor Information Database 
 - Arkansas Division of Workforce Services
